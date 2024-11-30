@@ -24,7 +24,7 @@ const userSchema = new Schema(
     },
     gender:{
       type: String,
-      enum: ['Woman', 'Men', 'Non Binary'],
+      enum: ['Woman', 'Man', 'Non Binary'],
       required: [true, 'El género es obligatorio']
     },
     role: {
@@ -37,7 +37,7 @@ const userSchema = new Schema(
     },
 
     //Artist specific
-    artisticName: {
+    artistName: {
       type: String,
     },
     musicGenres: [{

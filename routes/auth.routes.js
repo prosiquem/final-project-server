@@ -1,5 +1,11 @@
 const router = require('express').Router()
 
-//rutas a crear
+const {signUp, logIn, verify } = require('../controllers/auth.controllers')
+const verifyToken = require('../middlewares/verifyToken')
+
+router.post('/signup', signUp)
+router.post('/login', logIn)
+router.get('/verify', verifyToken, verify)
+
 
 module.exports = router

@@ -8,12 +8,22 @@
 |        GET         |     /verify     |      Verify User      |
 
 
-## Albums Routes
+## User Routes (TO DO)
 
 
 | **HTTP METHOD** | **PATH** | **ACTION** |
 |-----------------|----------|------------|
-|     GET            |     /albums     |      Get full albums lists      |
+|        PUT         |     /editUser     |      Edit User Data      | 
+|        GET         |     /users/:id     |      Get User data      | 
+|        DELETE         |     /users/:id     |      Delete user      | 
+
+
+## Albums Routes (TO DO)
+
+
+| **HTTP METHOD** | **PATH** | **ACTION** |
+|-----------------|----------|------------|
+|     GET            |     /albums     |      Get full albums lists      | 
 |        GET         |    /albums/:id      |      Get one album details      |
 |           GET      |     /albums/search     |     Search albums       |
 |         POST        |    /albums      |     Create a new album       |
@@ -21,7 +31,7 @@
 |        DELETE         |     /albums/:id     |    Delete one album        |
 
 
-## Tracks Routes
+## Tracks Routes (TO DO)
 
 
 | **HTTP METHOD** | **PATH** | **ACTION** |
