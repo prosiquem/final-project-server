@@ -38,7 +38,7 @@ const searchAlbum = (req, res, next) => {
 const createAlbum = (req, res, next) => {
 
     const { title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
-    const {_id: author} = req.payload
+    const { _id: author } = req.payload
 
     Album
         .create({ author, title, releaseDate, musicGenres, cover, credits, description, tracks })
@@ -63,7 +63,7 @@ const editAlbum = (req, res, next) => {
             albumId,
             { author, title, releaseDate, musicGenres, cover, credits, description, tracks },
             { runValidators: true, new: true })
-        .then(editedAlbum => res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
 }

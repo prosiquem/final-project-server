@@ -32,14 +32,33 @@ const getPlaylist = (req, res, next) => {
 }
 
 const searchPlaylist = (req, res, next) => {
-    const query = {}
 
-    for (const [key, value] of Object.entries(req.query)) {
-        query[key] = { $regex: value, $options: 'i' }
+    const findQuery = (queryParams) => {
+
+        const { name, owner } = queryParams
+
+        const query = {}
+
+        if (name) query.name = new RegExp(name, 'i')
+        if (owner) query.owner = new RegExp(owner, 'i')
+
+        return query
     }
 
+    // const sortQuery = (queryParams) => {
+    //     const { createdAt, updatedAt } = queryParams
+
+    //     const query = {}
+
+    //     if (createdAt) query.createdAt = 1
+    //     if (updatedAt) query.updatedAt = 1
+
+    //     return query
+    // }
+
     Playlist
-        .find(query)
+        .find(findQuery(req.query))
+        // .sort(sortQuery(req.query))
         .then(playlists => res.status(200).json(playlists))
         .catch(err => next(err))
 }
@@ -72,7 +91,7 @@ const editPlaylist = (req, res, next) => {
             playlistId,
             { name, public, cover, description, tracks },
             { runValidators: true, new: true })
-        .then(editedPlaylist => res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
 }
@@ -87,7 +106,7 @@ const deletePlaylist = (req, res, next) => {
 
     Playlist
         .findByIdAndDelete(playlistId)
-        .then(deletedAlbum => res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
 }

@@ -4,29 +4,29 @@ const User = require('../models/User.model')
 
 const getUser = (req, res, next) => {
 
-    const {id: userId} = req.params
+    const { id: userId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         res.status(404).json({ message: 'This id is not valid' })
     }
-    
+
     User
-    .findById(userId)
-    .then(user => res.status(200).json(user)) 
-    .catch(err => next(err))
+        .findById(userId)
+        .then(user => res.status(200).json(user))
+        .catch(err => next(err))
 
 }
 
 const getArtists = (req, res, next) => {
 
     User
-    .find({role: "ARTIST"})
-    .then(artists => res.status(200).json(artists))
-    .catch(err => next(err))
+        .find({ role: "ARTIST" })
+        .then(artists => res.status(200).json(artists))
+        .catch(err => next(err))
 }
 
 const editUser = (req, res, next) => {
-    const {id: userId} = req.params
+    const { id: userId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -37,7 +37,7 @@ const editUser = (req, res, next) => {
 }
 
 const deleteUser = (req, res, next) => {
-    const {id: userId} = req.params
+    const { id: userId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -46,4 +46,4 @@ const deleteUser = (req, res, next) => {
     res.json('Borro usuarios')
 }
 
-module.exports = {getUser, getArtists, deleteUser, editUser}
+module.exports = { getUser, getArtists, deleteUser, editUser }

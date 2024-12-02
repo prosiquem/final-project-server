@@ -41,7 +41,7 @@ const searchTrack = (req, res, next) => {
 const createTrack = (req, res, next) => {
 
     const { album, file, title, order, type, explicit, colabArtists, lyrics } = req.body
-    const {_id: author} = req.payload
+    const { _id: author } = req.payload
 
     Track
         .create({ author, album, file, title, order, type, explicit, colabArtists, lyrics })
@@ -66,7 +66,7 @@ const editTrack = (req, res, next) => {
             trackId,
             { author, album, file, title, order, type, explicit, colabArtists, lyrics },
             { runValidators: true, new: true })
-        .then(editedTrack => res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
 }

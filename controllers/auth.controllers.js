@@ -38,7 +38,7 @@ const signUp = (req, res, next) => {
         return
     }
 
-    if (role === 'ARTIST' && artisticName === '') {
+    if (role === 'ARTIST' && artistName === '') {
         res.status(401).json({ message: 'Artist name is mandatory to register as an artist' })
         return
     }
@@ -67,6 +67,7 @@ const signUp = (req, res, next) => {
 
             const salt = bcrypt.genSaltSync(saltRounds)
             const hashedPassword = bcrypt.hashSync(password, salt)
+
             return User.create({
                 email,
                 password: hashedPassword,
@@ -114,10 +115,12 @@ const logIn = (req, res, next) => {
 
             const { _id, email, username, role, avatar, artistName } = user
             const payload = { _id, email, username, role, avatar, artistName }
+
             const authToken = jwt.sign(
                 payload,
                 process.env.TOKEN_SECRET,
-                { algorithm: 'HS256', expiresIn: '6h' })
+                { algorithm: 'HS256', expiresIn: '6h' }
+            )
 
             res.json({ authToken })
         })
@@ -125,7 +128,7 @@ const logIn = (req, res, next) => {
 }
 
 const verify = (req, res, next) => {
-    res.json({loggedUserData: req.payload})
+    res.json({ loggedUserData: req.payload })
 }
 
 module.exports = { signUp, logIn, verify }
