@@ -1,6 +1,7 @@
 const express = require("express")
 const logger = require("morgan")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 
 const FRONTEND_URL = process.env.ORIGIN || "http://localhost:5173"
 
@@ -11,12 +12,10 @@ module.exports = (app) => {
     cors({
       origin: [FRONTEND_URL]
     })
-
   )
 
   app.use(logger("dev"))
-
-
   app.use(express.json())
-
-};
+  app.use(express.urlencoded({ extended: false }))
+  app.use(cookieParser())
+}
