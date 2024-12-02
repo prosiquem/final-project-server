@@ -35,6 +35,10 @@ const userSchema = new Schema(
     avatar: {
       type: String,
     },
+    playlists: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Playlist'
+    }],
 
     //Artist specific
     artistName: {
@@ -56,7 +60,10 @@ const userSchema = new Schema(
     relatedArtists: [{
       type: Schema.Types.ObjectId,
       ref: 'User'
-    }]
+    }],
+    verified: {
+      type: Boolean,
+    }
   },
 
   {

@@ -40,8 +40,8 @@ const searchTrack = (req, res, next) => {
 
 const createTrack = (req, res, next) => {
 
-    const { author, album, file, title, order, type, explicit, colabArtists, lyrics } = req.body
-    // const {_id: owner} = req.payload
+    const { album, file, title, order, type, explicit, colabArtists, lyrics } = req.body
+    const {_id: author} = req.payload
 
     Track
         .create({ author, album, file, title, order, type, explicit, colabArtists, lyrics })

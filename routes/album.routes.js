@@ -1,13 +1,14 @@
-const { searchAlbum, getAlbums, createAlbum, editAlbum, deleteAlbum } = require('../controllers/album.controllers')
+const { searchAlbum, getAlbums, getAlbum, createAlbum, editAlbum, deleteAlbum } = require('../controllers/album.controllers')
+const verifyToken = require('../middlewares/verifyToken')
 
 const router = require('express').Router()
 
 
 router.get('/albums/search', searchAlbum)
 router.get('/albums', getAlbums)
-router.get('albums/:id', getAlbums)
+router.get('/albums/:id', getAlbum)
 
-router.post('/albums', createAlbum)
+router.post('/albums', verifyToken, createAlbum)
 
 router.put('/albums/:id', editAlbum)
 

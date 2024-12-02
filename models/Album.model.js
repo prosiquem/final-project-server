@@ -4,7 +4,8 @@ const albumSchema = Schema(
     {
         author: {
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: [true, 'El autor es obligatorio']
         },
         title: {
             type: String,

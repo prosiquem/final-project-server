@@ -20,7 +20,7 @@ const getAlbum = (req, res, next) => {
     }
 
     Album
-        .findById(albumtId)
+        .findById(albumId)
         .then(album => {
             res.json(album)
         })
@@ -37,8 +37,8 @@ const searchAlbum = (req, res, next) => {
 
 const createAlbum = (req, res, next) => {
 
-    const { author, title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
-    // const {_id: owner} = req.payload
+    const { title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
+    const {_id: author} = req.payload
 
     Album
         .create({ author, title, releaseDate, musicGenres, cover, credits, description, tracks })
