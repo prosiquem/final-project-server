@@ -1,11 +1,16 @@
 const mongoose = require('mongoose')
 const Track = require('../models/Track.model')
+const Album = require('../models/Album.model')
+const User = require('../models/User.model')
+
 
 const getTracks = (req, res, next) => {
 
     Track
         .find()
         .select({ title: 1, cover: 1, album: 1, author: 1 })
+        .populate('album', 'title')
+        .populate('author', 'artistName')
         .then(tracks => {
             res.json(tracks)
         })
@@ -23,6 +28,8 @@ const getTrack = (req, res, next) => {
 
     Track
         .findById(trackId)
+        .populate('album')
+        .populate('author')
         .then(track => {
             res.json(track)
         })
@@ -34,6 +41,8 @@ const searchTrack = (req, res, next) => {
 
     Track
         .find(req.query)
+        .populate('album')
+        .populate('author')
         .then(tracks => res.status(200).json(tracks))
         .catch(err => next(err))
 }

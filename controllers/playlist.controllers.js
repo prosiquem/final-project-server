@@ -1,5 +1,7 @@
-const Playlist = require('../models/Playlist.model')
 const mongoose = require('mongoose')
+const Playlist = require('../models/Playlist.model')
+const Track = require('../models/Track.model')
+const Album = require('../models/Album.model')
 
 
 const getPlaylists = (req, res, next) => {
@@ -7,6 +9,7 @@ const getPlaylists = (req, res, next) => {
     Playlist
         .find()
         .select({ name: 1, cover: 1, tracks: 1 })
+        .populate('tracks', 'title')
         .then(playlists => {
             res.json(playlists)
         })
@@ -24,6 +27,17 @@ const getPlaylist = (req, res, next) => {
 
     Playlist
         .findById(playlistId)
+        .populate('tracks', ['title', 'author', 'album', 'time'])
+        // .populate({
+        //     path: 'author',
+        //     // select: ['name', 'bio']
+            
+        //   },
+        //   { strictPopulate: false })
+        // .populate({
+        //     path: 'album',
+        //     // select: ['title', 'releaseDate']  // Seleccionando campos específicos del album
+        //   })
         .then(playlist => {
             res.json(playlist)
         })
@@ -59,6 +73,7 @@ const searchPlaylist = (req, res, next) => {
     Playlist
         .find(findQuery(req.query))
         // .sort(sortQuery(req.query))
+        .populate('tracks', 'title')
         .then(playlists => res.status(200).json(playlists))
         .catch(err => next(err))
 }

@@ -1,10 +1,13 @@
 const mongoose = require('mongoose')
 const Album = require('../models/Album.model')
+const User = require('../models/User.model')
+const Tracklist = require('../models/Track.model')
 
 const getAlbums = (req, res, next) => {
     Album
         .find()
         .select({ title: 1, author: 1, cover: 1 })
+        .populate('author', ['artistName', 'username'])
         .then(albums => {
             res.json(albums)
         })
@@ -21,6 +24,7 @@ const getAlbum = (req, res, next) => {
 
     Album
         .findById(albumId)
+        .populate('author', ['artistName', 'username'])
         .then(album => {
             res.json(album)
         })
@@ -29,9 +33,30 @@ const getAlbum = (req, res, next) => {
 
 const searchAlbum = (req, res, next) => {
 
+    const findQuery = (queryParams) => {
+
+        const { author, title, minReleaseDate, maxReleaseDate, musicGenres } = queryParams
+
+        const query = {}
+
+        if (title) query.title = new RegExp(title, 'i')
+        // if (author && author.artistName) query.author.artistName = new RegExp(author, 'i')
+        // if (author) query.author = {username: new RegExp(author, 'i')}
+        if(minReleaseDate) query.releaseDate = {$gte: minReleaseDate}
+        if(maxReleaseDate) query.releaseDate = {$lte: maxReleaseDate}
+
+        const musicGenresArr = []
+        if (musicGenres && musicGenres.length > 0)  query.musicGenres = { $in: musicGenres }
+
+        return query
+    }
+
     Album
-        .find(req.query)
-        .then(albums => res.status(200).json(albums))
+        .find(findQuery(req.query))
+        .populate('author', ['artistName', 'username'])
+        .then(albums => {
+            res.status(200).json(albums)
+        })
         .catch(err => next(err))
 }
 
@@ -63,7 +88,10 @@ const editAlbum = (req, res, next) => {
             albumId,
             { author, title, releaseDate, musicGenres, cover, credits, description, tracks },
             { runValidators: true, new: true })
-        .then(() => res.sendStatus(200))
+        .populate('author', ['artistName', 'username'])
+        .then(() => {
+            res.sendStatus(200)
+        })
         .catch(err => next(err))
 
 }
@@ -78,7 +106,9 @@ const deleteAlbum = (req, res, next) => {
 
     Album
         .findByIdAndDelete(albumId)
-        .then(deletedAlbum => res.sendStatus(200))
+        .then(deletedAlbum => {
+            res.sendStatus(200)
+        })
         .catch(err => next(err))
 
 }
