@@ -67,7 +67,7 @@ const editPlaylist = (req, res, next) => {
             playlistId,
             { name, public, cover, description, tracks },
             { runValidators: true, new: true })
-        .then(editedCoaster => res.sendStatus(200))
+        .then(editedPlaylist => res.sendStatus(200))
         .catch(err => next(err))
 
 }
@@ -82,7 +82,7 @@ const deletePlaylist = (req, res, next) => {
 
     Playlist
         .findByIdAndDelete(playlistId)
-        .then(deletedCoaster => res.sendStatus(200))
+        .then(deletedAlbum => res.sendStatus(200))
         .catch(err => next(err))
 
 }
