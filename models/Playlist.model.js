@@ -1,11 +1,11 @@
-const {Schema, model} = require ('mongoose')
+const { Schema, model } = require('mongoose')
 
 const playlistSchema = Schema(
     {
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            // required: [true, 'El dueño es necesario']
+            required: [true, 'El dueño es necesario']
         },
         name: {
             type: String,
@@ -32,5 +32,5 @@ const playlistSchema = Schema(
     }
 )
 
-const Playlist = model ('Playlist', playlistSchema)
+const Playlist = model('Playlist', playlistSchema)
 module.exports = Playlist

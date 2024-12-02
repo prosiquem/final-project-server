@@ -32,9 +32,14 @@ const getPlaylist = (req, res, next) => {
 }
 
 const searchPlaylist = (req, res, next) => {
+    const query = {}
+
+    for (const [key, value] of Object.entries(req.query)) {
+        query[key] = { $regex: value, $options: 'i' }
+    }
 
     Playlist
-        .find(req.query)
+        .find(query)
         .then(playlists => res.status(200).json(playlists))
         .catch(err => next(err))
 }
@@ -42,7 +47,7 @@ const searchPlaylist = (req, res, next) => {
 const createPlaylist = (req, res, next) => {
 
     const { name, public, cover, description, tracks } = req.body
-    // const {_id: owner} = req.payload
+    const { _id: owner } = req.payload
 
     Playlist
         .create({ name, public, cover, description, tracks, owner })
