@@ -35,7 +35,7 @@ const searchAlbum = (req, res, next) => {
 
     const findQuery = (queryParams) => {
 
-        const { author, title, minReleaseDate, maxReleaseDate, musicGenres } = queryParams
+        const { title, minReleaseDate, maxReleaseDate, musicGenres } = queryParams
 
         const query = {}
 
@@ -44,20 +44,45 @@ const searchAlbum = (req, res, next) => {
         // if (author) query.author = {username: new RegExp(author, 'i')}
         if(minReleaseDate) query.releaseDate = {$gte: minReleaseDate}
         if(maxReleaseDate) query.releaseDate = {$lte: maxReleaseDate}
+        if(musicGenres) {
 
-        const musicGenresArr = []
-        if (musicGenres && musicGenres.length > 0)  query.musicGenres = { $in: musicGenres }
+            const separated = musicGenres.split(', ')
+            const regArra = separated.map((value) => new RegExp(value))
+            query.musicGenres = { $all: regArra }
+        }  
 
         return query
     }
 
     Album
         .find(findQuery(req.query))
-        .populate('author', ['artistName', 'username'])
         .then(albums => {
-            res.status(200).json(albums)
+            res.json(albums)
         })
         .catch(err => next(err))
+}
+
+const searchArtistsAlbum = (req, res, next) => {
+
+    const findQuery = (queryParams) => {
+
+        const {id:artistId} = queryParams
+        const query = {}
+
+
+        if (artistId) query.author = artistId
+
+        return query
+
+    }
+
+    Album
+    .find(findQuery(req.params))
+    .then(albums => {
+        res.json(albums)
+    })
+    .catch(err => next(err))
+
 }
 
 const createAlbum = (req, res, next) => {
@@ -77,7 +102,7 @@ const createAlbum = (req, res, next) => {
 const editAlbum = (req, res, next) => {
 
     const { id: albumId } = req.params
-    const { author, title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
+    const { title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
 
     if (!mongoose.Types.ObjectId.isValid(albumId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -86,7 +111,7 @@ const editAlbum = (req, res, next) => {
     Album
         .findByIdAndUpdate(
             albumId,
-            { author, title, releaseDate, musicGenres, cover, credits, description, tracks },
+            { title, releaseDate, musicGenres, cover, credits, description, tracks },
             { runValidators: true, new: true })
         .populate('author', ['artistName', 'username'])
         .then(() => {
@@ -113,4 +138,4 @@ const deleteAlbum = (req, res, next) => {
 
 }
 
-module.exports = { getAlbums, getAlbum, searchAlbum, createAlbum, editAlbum, deleteAlbum }
+module.exports = { getAlbums, getAlbum, searchAlbum, createAlbum, editAlbum, deleteAlbum, searchArtistsAlbum }

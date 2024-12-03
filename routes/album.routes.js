@@ -1,10 +1,11 @@
-const { searchAlbum, getAlbums, getAlbum, createAlbum, editAlbum, deleteAlbum } = require('../controllers/album.controllers')
+const { searchAlbum, getAlbums, getAlbum, createAlbum, editAlbum, deleteAlbum, searchArtistsAlbum } = require('../controllers/album.controllers')
 const verifyToken = require('../middlewares/verifyToken')
 
 const router = require('express').Router()
 
 
 router.get('/albums/search', searchAlbum)
+router.get('/albums/search/:id', searchArtistsAlbum)
 router.get('/albums', getAlbums)
 router.get('/albums/:id', getAlbum)
 

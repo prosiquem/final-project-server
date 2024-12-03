@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
+
 const Playlist = require('../models/Playlist.model')
 const Track = require('../models/Track.model')
 const Album = require('../models/Album.model')
+const User = require('../models/User.model')
 
 
 const getPlaylists = (req, res, next) => {
@@ -27,17 +29,17 @@ const getPlaylist = (req, res, next) => {
 
     Playlist
         .findById(playlistId)
-        .populate('tracks', ['title', 'author', 'album', 'time'])
-        // .populate({
-        //     path: 'author',
-        //     // select: ['name', 'bio']
-            
-        //   },
-        //   { strictPopulate: false })
-        // .populate({
-        //     path: 'album',
-        //     // select: ['title', 'releaseDate']  // Seleccionando campos específicos del album
-        //   })
+        .populate('owner', 'username')
+        .populate({
+            path: 'tracks',
+            select: ['title', 'author', 'album', 'time'],
+            model: Track,
+            populate: [
+                { path: 'author', select: ['artistName', 'username'] },
+                { path: 'album', select: 'title' }
+            ]
+        })
+
         .then(playlist => {
             res.json(playlist)
         })
@@ -49,11 +51,11 @@ const searchPlaylist = (req, res, next) => {
 
     const findQuery = (queryParams) => {
 
-        const { name, owner } = queryParams
+        const { title, owner } = queryParams
 
         const query = {}
 
-        if (name) query.name = new RegExp(name, 'i')
+        // if (title) query.name = new RegExp(title, 'i')
         if (owner) query.owner = new RegExp(owner, 'i')
 
         return query
@@ -86,8 +88,17 @@ const createPlaylist = (req, res, next) => {
     Playlist
         .create({ name, public, cover, description, tracks, owner })
         .then(newPlaylist => {
-            res.status(201).json(newPlaylist)
+            return (
+                User.findByIdAndUpdate(
+                    owner,
+                    { $push: {playlists: newPlaylist._id}},
+                    { runValidators: true, new: true }
+                )
+            )
         })
+        .then(() => {
+            res.sendStatus(201)
+        } )
         .catch(err => next(err))
 
 }

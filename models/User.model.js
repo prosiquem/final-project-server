@@ -63,6 +63,12 @@ const userSchema = new Schema(
     }],
     verified: {
       type: Boolean,
+      default: false
+    },
+    isActive: {
+      type: Boolean,
+      required: true,
+      default: true
     }
   },
 

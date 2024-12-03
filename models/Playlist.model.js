@@ -13,7 +13,8 @@ const playlistSchema = Schema(
         },
         public: {
             type: Boolean,
-            required: [true, 'La privacidad es necesaria']
+            required: [true, 'La privacidad es necesaria'],
+            default: true
         },
         tracks: [{
             type: Schema.Types.ObjectId,

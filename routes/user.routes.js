@@ -1,12 +1,14 @@
 const router = require('express').Router()
 
-const { getUser, getArtists, editUser, deleteUser } = require('../controllers/user.controllers')
+const { getUser, getArtists, searchArtists, editUser, deleteUser } = require('../controllers/user.controllers')
+const verifyToken = require('../middlewares/verifyToken')
 
+router.get('/artists/search', searchArtists)
 router.get('/artists', getArtists)
 router.get('/users/:id', getUser)
 
-router.put('/artists/:id', editUser)
+router.put('/users/:id', verifyToken, editUser)
 
-router.delete('/artists/:id', deleteUser)
+router.delete('/users/:id', verifyToken, deleteUser)
 
 module.exports = router
