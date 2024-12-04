@@ -55,7 +55,11 @@ const userSchema = new Schema(
       type: String,
     },
     socialMedia: {
-      type: [String],
+      type: [{
+        socialMedia: {type: String},
+        url: {type: String},
+        icon: {type: String}
+      }],
     },
     relatedArtists: [{
       type: Schema.Types.ObjectId,
