@@ -22,30 +22,35 @@ const signUp = (req, res, next) => {
     } = req.body
 
     if (email === '' || password === '' || username === '' || birth === '' || gender === '' || role === '') {
-        res.status(401).json({ message: 'Email, username, paswword, birth date, gender and role are mandatory.' })
+        console.log('Email, username, paswword, birth date, gender and role are mandatory.')
+        res.status(409).json({ message: 'Email, username, paswword, birth date, gender and role are mandatory.' })
         return
     }
 
     const allowedGender = User.schema.path('gender').enumValues
     if (!allowedGender.includes(gender)) {
-        res.status(401).json({ message: 'Gender does not exist' })
+        console.log('Gender does not exist')
+        res.status(409).json({ message: 'Gender does not exist' })
         return
     }
 
     const allowedRoles = User.schema.path('role').enumValues
     if (!allowedRoles.includes(role)) {
-        res.status(401).json({ message: 'Role does not exist' })
+        console.log('Role does not exist')
+        res.status(409).json({ message: 'Role does not exist' })
         return
     }
 
     if (role === 'ARTIST' && artistName === '') {
-        res.status(401).json({ message: 'Artist name is mandatory to register as an artist' })
+        console.log('Artist name is mandatory to register as an artist')
+        res.status(409).json({ message: 'Artist name is mandatory to register as an artist' })
         return
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
     if (!emailRegex.test(email)) {
-        res.status(401).json({ message: 'Provide a valid email address.' })
+        console.log('Provide a valid email address.')
+        res.status(409).json({ message: 'Provide a valid email address.' })
         return
     }
 
@@ -61,6 +66,7 @@ const signUp = (req, res, next) => {
         .findOne({ email })
         .then(user => {
             if (user) {
+                console.log('User already exists')
                 res.status(401).json({ message: 'User already exists.' })
                 return
             }
@@ -94,7 +100,8 @@ const logIn = (req, res, next) => {
     const { email, password } = req.body
 
     if (email === '' || password === '') {
-        res.status(401).json({ message: 'Provide email and password.' })
+        console.log('Provide email and password')
+        res.status(409).json({ message: 'Provide email and password.' })
         return
     }
 
@@ -103,13 +110,15 @@ const logIn = (req, res, next) => {
         .then(user => {
 
             if (!user) {
+                console.log('User not valid')
                 res.status(401).json({ message: 'User not valid' })
                 return
             }
 
             const isCorrectPwd = bcrypt.compareSync(password, user.password)
             if (!isCorrectPwd) {
-                res.status(401).json({ message: 'Password not valid' })
+                console.log('Password not valid')
+                res.status(409).json({ message: 'Password not valid' })
                 return
             }
 
