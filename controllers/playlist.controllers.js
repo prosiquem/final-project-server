@@ -10,7 +10,22 @@ const getPlaylists = (req, res, next) => {
 
     Playlist
         .find()
-        .select({ name: 1, cover: 1, tracks: 1 , owner: 1})
+        .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
+        .populate('tracks', 'title')
+        .populate('owner', 'username')
+        .then(playlists => {
+            res.json(playlists)
+        })
+        .catch(err => next(err))
+
+}
+
+const getLastPlaylists = (req, res, next) => {
+
+    Playlist
+        .find()
+        .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
+        .sort({ createdAt: 1 })
         .populate('tracks', 'title')
         .populate('owner', 'username')
         .then(playlists => {
@@ -92,14 +107,14 @@ const createPlaylist = (req, res, next) => {
             return (
                 User.findByIdAndUpdate(
                     owner,
-                    { $push: {playlists: newPlaylist._id}},
+                    { $push: { playlists: newPlaylist._id } },
                     { runValidators: true, new: true }
                 )
             )
         })
         .then(() => {
             res.sendStatus(201)
-        } )
+        })
         .catch(err => next(err))
 
 }
@@ -138,4 +153,4 @@ const deletePlaylist = (req, res, next) => {
 
 }
 
-module.exports = { getPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist }
+module.exports = { getPlaylists, getLastPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist }

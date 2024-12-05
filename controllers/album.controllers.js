@@ -14,6 +14,18 @@ const getAlbums = (req, res, next) => {
         .catch(err => next(err))
 }
 
+const getLastAlbums = (req, res, next) => {
+    Album
+        .find()
+        .select({ title: 1, author: 1, cover: 1 })
+        .sort({ createdAt: 1 })
+        .populate('author', ['artistName', 'username'])
+        .then(albums => {
+            res.json(albums)
+        })
+        .catch(err => next(err))
+}
+
 const getAlbum = (req, res, next) => {
 
     const { id: albumId } = req.params
@@ -42,14 +54,14 @@ const searchAlbum = (req, res, next) => {
         if (title) query.title = new RegExp(title, 'i')
         // if (author && author.artistName) query.author.artistName = new RegExp(author, 'i')
         // if (author) query.author = {username: new RegExp(author, 'i')}
-        if(minReleaseDate) query.releaseDate = {$gte: minReleaseDate}
-        if(maxReleaseDate) query.releaseDate = {$lte: maxReleaseDate}
-        if(musicGenres) {
+        if (minReleaseDate) query.releaseDate = { $gte: minReleaseDate }
+        if (maxReleaseDate) query.releaseDate = { $lte: maxReleaseDate }
+        if (musicGenres) {
 
             const separated = musicGenres.split(', ')
             const regArra = separated.map((value) => new RegExp(value))
             query.musicGenres = { $all: regArra }
-        }  
+        }
 
         return query
     }
@@ -66,7 +78,7 @@ const searchArtistsAlbum = (req, res, next) => {
 
     const findQuery = (queryParams) => {
 
-        const {id:artistId} = queryParams
+        const { id: artistId } = queryParams
         const query = {}
 
 
@@ -77,11 +89,11 @@ const searchArtistsAlbum = (req, res, next) => {
     }
 
     Album
-    .find(findQuery(req.params))
-    .then(albums => {
-        res.json(albums)
-    })
-    .catch(err => next(err))
+        .find(findQuery(req.params))
+        .then(albums => {
+            res.json(albums)
+        })
+        .catch(err => next(err))
 
 }
 
@@ -138,4 +150,4 @@ const deleteAlbum = (req, res, next) => {
 
 }
 
-module.exports = { getAlbums, getAlbum, searchAlbum, createAlbum, editAlbum, deleteAlbum, searchArtistsAlbum }
+module.exports = { getAlbums, getLastAlbums, getAlbum, searchAlbum, createAlbum, editAlbum, deleteAlbum, searchArtistsAlbum }
