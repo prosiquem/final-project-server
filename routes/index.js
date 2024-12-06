@@ -6,6 +6,7 @@ module.exports = app => {
   const albumRouter = require('./album.routes')
   const trackRouter = require('./track.routes')
   const searchRouter = require('./search.routes')
+  const uploadRouter = require('./upload.routes')
 
   app.use('/api', authRouter)
   app.use('/api', albumRouter)
@@ -13,5 +14,6 @@ module.exports = app => {
   app.use('/api', playlistRouter)
   app.use('/api', userRouter)
   app.use('/api', searchRouter)
+  app.use('/upload', uploadRouter)
 
 }
