@@ -89,9 +89,14 @@ const createPlaylist = (req, res, next) => {
     const { name, public, cover, description, tracks } = req.body
     const { _id: owner } = req.payload
 
+    let _id
+
     Playlist
         .create({ name, public, cover, description, tracks, owner })
         .then(newPlaylist => {
+
+            _id = newPlaylist._id
+
             return (
                 User.findByIdAndUpdate(
                     owner,
@@ -100,8 +105,8 @@ const createPlaylist = (req, res, next) => {
                 )
             )
         })
-        .then((newPlaylist) => {
-            res.status(201).json(newPlaylist)
+        .then(() => {
+            res.status(201).json(_id)
         })
         .catch(err => next(err))
 
