@@ -77,20 +77,8 @@ const searchPlaylist = (req, res, next) => {
         return query
     }
 
-    // const sortQuery = (queryParams) => {
-    //     const { createdAt, updatedAt } = queryParams
-
-    //     const query = {}
-
-    //     if (createdAt) query.createdAt = 1
-    //     if (updatedAt) query.updatedAt = 1
-
-    //     return query
-    // }
-
     Playlist
         .find(findQuery(req.query))
-        // .sort(sortQuery(req.query))
         .populate('tracks', 'title')
         .then(playlists => res.status(200).json(playlists))
         .catch(err => next(err))
