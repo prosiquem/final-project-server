@@ -112,8 +112,8 @@ const createPlaylist = (req, res, next) => {
                 )
             )
         })
-        .then(() => {
-            res.sendStatus(201)
+        .then((newPlaylist) => {
+            res.status(201).json(newPlaylist)
         })
         .catch(err => next(err))
 
