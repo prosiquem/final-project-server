@@ -12,6 +12,6 @@ router.post('/playlists', verifyToken, createPlaylist)
 
 router.put('/playlists/:id', editPlaylist)
 
-router.delete('/playlists/:id', deletePlaylist)
+router.delete('/playlists/:id', verifyToken, deletePlaylist)
 
 module.exports = router

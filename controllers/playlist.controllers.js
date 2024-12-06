@@ -134,6 +134,8 @@ const editPlaylist = (req, res, next) => {
 const deletePlaylist = (req, res, next) => {
 
     const { id: playlistId } = req.params
+    const { _id: owner } = req.payload
+
 
     if (!mongoose.Types.ObjectId.isValid(playlistId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -141,6 +143,18 @@ const deletePlaylist = (req, res, next) => {
 
     Playlist
         .findByIdAndDelete(playlistId)
+        .then((deletedPlaylist) => {
+
+            if (!deletedPlaylist) {
+                return res.status(404).json({ message: 'Playlist not found' });
+            }
+
+            return (User.findByIdAndUpdate(
+                owner,
+                { $pull: { playlists: playlistId } },
+                { runValidators: true, new: true }
+            ))
+        })
         .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
