@@ -6,7 +6,7 @@ const Tracklist = require('../models/Track.model')
 const getAlbums = (req, res, next) => {
     Album
         .find()
-        .select({ title: 1, author: 1, cover: 1 })
+        .select({ title: 1, author: 1, tracks: 1, cover: 1 })
         .populate('author', ['artistName', 'username'])
         .then(albums => {
             res.json(albums)
@@ -17,7 +17,7 @@ const getAlbums = (req, res, next) => {
 const getLastAlbums = (req, res, next) => {
     Album
         .find()
-        .select({ title: 1, author: 1, cover: 1 })
+        .select({ title: 1, author: 1, tracks: 1, cover: 1 })
         .sort({ createdAt: 1 })
         .populate('author', ['artistName', 'username'])
         .then(albums => {

@@ -21,9 +21,15 @@ const searchAll = (req, res, next) => {
     const query = findQuery(req.query)
 
     const promises = {
-        playlists: Playlist.find({ name: query.name }),
-        albums: Album.find({ title: query.title }),
-        tracks: Track.find({ title: query.title }),
+        playlists: Playlist
+            .find({ name: query.name })
+            .populate('owner', 'username'),
+        albums: Album
+            .find({ title: query.title })
+            .populate('author', ['artistName', 'username']),
+        tracks: Track
+            .find({ title: query.title })
+            .populate('author', 'artistName'),
         artists: User.find({ artistName: query.artistName }),
     }
 
