@@ -17,7 +17,7 @@ const albumSchema = Schema(
         },
         musicGenres: [{
             type: String,
-            emun: [ "Rock", "Pop", "Jazz", "Blues", "Reggae", "Hip Hop", "Rap", "Country", "Clásica", "Metal", "Funk", "Soul", "Techno", "K-Pop","Bachata","Reggaeton", "Trap", "Indie"] 
+            emun: ["Rock", "Pop", "Jazz", "Blues", "Reggae", "Hip Hop", "Rap", "Country", "Clásica", "Metal", "Funk", "Soul", "Techno", "K-Pop", "Bachata", "Reggaeton", "Trap", "Indie"]
         }],
         cover: {
             type: String,
@@ -40,7 +40,7 @@ const albumSchema = Schema(
         },
         tracks: [{
             type: Schema.Types.ObjectId,
-            ref: 'Tracks'
+            ref: 'Track'
         }]
 
     },
