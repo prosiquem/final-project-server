@@ -37,6 +37,7 @@ const getAlbum = (req, res, next) => {
     Album
         .findById(albumId)
         .populate('author', ['artistName', 'username'])
+        .populate('tracks', ['title', 'file'])
         .then(album => {
             res.json(album)
         })
