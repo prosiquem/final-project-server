@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 const Album = require('../models/Album.model')
 const User = require('../models/User.model')
 const Tracklist = require('../models/Track.model')
@@ -103,10 +104,25 @@ const createAlbum = (req, res, next) => {
     const { title, releaseDate, musicGenres, cover, credits, description, tracks } = req.body
     const { _id: author } = req.payload
 
+    let _id
+
     Album
         .create({ author, title, releaseDate, musicGenres, cover, credits, description, tracks })
         .then(newAlbum => {
-            res.status(201).json(newAlbum)
+
+            _id = newAlbum._id
+
+            return (
+                User.findByIdAndUpdate(
+                    author,
+                    { $push: { albums: newAlbum._id } },
+                    { runValidators: true, new: true }
+                )
+            )
+
+        })
+        .then(() => {
+            res.status(201).json(_id)
         })
         .catch(err => next(err))
 
