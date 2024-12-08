@@ -48,11 +48,11 @@ const getPlaylist = (req, res, next) => {
         .populate('owner', 'username')
         .populate({
             path: 'tracks',
-            select: ['title', 'author', 'album', 'time'],
+            select: ['title', 'author', 'album', 'time', 'file'],
             model: Track,
             populate: [
                 { path: 'author', select: ['artistName', 'username'] },
-                { path: 'album', select: 'title' }
+                { path: 'album', select: ['title', 'cover'] }
             ]
         })
 
