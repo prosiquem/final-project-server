@@ -13,6 +13,6 @@ router.post('/albums', verifyToken, createAlbum)
 
 router.put('/albums/:id', editAlbum)
 
-router.delete('/albums/:id', deleteAlbum)
+router.delete('/albums/:id', verifyToken, deleteAlbum)
 
 module.exports = router

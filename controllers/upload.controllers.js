@@ -29,11 +29,16 @@ const uploadTracks = (req, res, next) => {
         return
     }
 
-    const pathArr = req.files.map(elm => {
-        return elm.path
-    })
+    const obj = req.files
 
-    res.json({ cloudinary_url: pathArr })
+    const filesArr = req.files.map(elm => {
+
+        return ({
+            path: elm.path,
+            originalName: elm.originalname
+        })
+    })
+    res.json(filesArr)
 
 }
 

@@ -8,6 +8,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET
 })
 
-const storage = new CloudinaryStorage({ cloudinary: cloudinary, params: { folder: 'koon' } })
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'koon',
+        resource_type: 'auto',
+        allowedFormats: ['jpeg', 'png', 'jpg', 'mp3']
+    }
+})
 
 module.exports = multer({ storage })
