@@ -84,6 +84,29 @@ const createTrack = (req, res, next) => {
 
 }
 
+const createTracks = (req, res, next) => {
+
+    const { _id: author } = req.payload
+
+    const newElmArr = [...req.body]
+
+    Track
+        .create(newElmArr)
+        .then(newTracks => {
+            const trackIds = newTracks.map(elm => elm._id)
+            return Album.findByIdAndUpdate(
+                newTracks[0].album,
+                { $push: { tracks: trackIds } },
+                { runValidators: true, new: true }
+            )
+        })
+        .then(() => {
+            res.sendStatus(200)
+        })
+        .catch(err => next(err))
+
+}
+
 const editTrack = (req, res, next) => {
 
     const { id: trackId } = req.params
@@ -116,8 +139,6 @@ const editTrack = (req, res, next) => {
             return Promise.all(promises)
         })
         .then(([oldAlbumResult, newAlbumResult]) => {
-            console.log('---1', oldAlbumResult)
-            console.log('---2', newAlbumResult)
             res.sendStatus(200)
         })
 
@@ -140,4 +161,4 @@ const deleteTrack = (req, res, next) => {
 
 }
 
-module.exports = { getTracks, getTrack, searchTrack, createTrack, editTrack, deleteTrack }
+module.exports = { getTracks, getTrack, searchTrack, createTrack, createTracks, editTrack, deleteTrack }
