@@ -10,8 +10,8 @@ router.get('/tracks/:id', getTrack)
 router.post('/track', verifyToken, createTrack)
 router.post('/tracks', verifyToken, createTracks)
 
-router.put('/tracks/:id', editTrack)
+router.put('/tracks/:id', verifyToken, editTrack)
 
-router.delete('/tracks/:id', deleteTrack)
+router.delete('/tracks/:id', verifyToken, deleteTrack)
 
 module.exports = router
