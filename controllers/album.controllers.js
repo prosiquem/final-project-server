@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Album = require('../models/Album.model')
 const User = require('../models/User.model')
 const Tracklist = require('../models/Track.model')
+const Track = require('../models/Track.model')
 
 const getAlbums = (req, res, next) => {
     Album
@@ -38,7 +39,15 @@ const getAlbum = (req, res, next) => {
     Album
         .findById(albumId)
         .populate('author', ['artistName', 'username'])
-        .populate('tracks', ['title', 'file'])
+        .populate({
+            path: 'tracks',
+            select: ['title', 'author', 'album', 'time', 'file'],
+            model: Track,
+            populate: [
+                { path: 'author', select: ['artistName', 'username'] },
+                { path: 'album', select: ['title', 'cover'] }
+            ]
+        })
         .then(album => {
             res.json(album)
         })
