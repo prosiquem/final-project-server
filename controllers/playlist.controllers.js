@@ -11,6 +11,7 @@ const getPlaylists = (req, res, next) => {
     Playlist
         .find()
         .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
+        .sort({ createdAt: -1 })
         .populate('tracks', 'title')
         .populate('owner', 'username')
         .then(playlists => {
@@ -25,7 +26,8 @@ const getLastPlaylists = (req, res, next) => {
     Playlist
         .find()
         .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
-        .sort({ createdAt: 1 })
+        .limit(10)
+        .sort({ createdAt: -1 })
         .populate('tracks', 'title')
         .populate('owner', 'username')
         .then(playlists => {

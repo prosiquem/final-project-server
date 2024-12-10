@@ -12,6 +12,7 @@ const getUser = (req, res, next) => {
 
     User
         .findById(userId)
+        .populate('playlists')
         .then(user => res.status(200).json(user))
         .catch(err => next(err))
 
