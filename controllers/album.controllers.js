@@ -102,6 +102,7 @@ const searchArtistsAlbum = (req, res, next) => {
 
     Album
         .find(findQuery(req.params))
+        .populate('author')
         .then(albums => {
             res.json(albums)
         })

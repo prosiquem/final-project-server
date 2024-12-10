@@ -24,7 +24,7 @@ const getPlaylists = (req, res, next) => {
 const getLastPlaylists = (req, res, next) => {
 
     Playlist
-        .find()
+        .find({ public: true })
         .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
         .limit(10)
         .sort({ createdAt: -1 })
