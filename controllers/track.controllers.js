@@ -150,13 +150,27 @@ const deleteTrack = (req, res, next) => {
 
     const { id: trackId } = req.params
 
+
     if (!mongoose.Types.ObjectId.isValid(trackId)) {
         res.status(404).json({ message: 'This id is not valid' })
     }
 
     Track
         .findByIdAndDelete(trackId)
-        .then(deletedTrack => res.sendStatus(200))
+        .then(deletedTrack => {
+
+            if (!deletedTrack) {
+                return res.status(404).json({ message: 'Album not found' });
+            }
+
+            return (Album.findByIdAndUpdate(
+                deletedTrack.album,
+                { $pull: { tracks: trackId } },
+                { runValidators: true, new: true }
+            ))
+
+        })
+        .then(() => res.sendStatus(200))
         .catch(err => next(err))
 
 }
