@@ -61,7 +61,19 @@ const searchArtists = (req, res, next) => {
 const editUser = (req, res, next) => {
 
     const { id: userId } = req.params
-    const { birth, gender, musicGenres, socialMedia, relatedArtists, playlists } = req.body
+    const {
+        birth,
+        gender,
+        musicGenres,
+        socialMedia,
+        relatedArtists,
+        playlists,
+        artistName,
+        username,
+        role,
+        avatar,
+        artistGallery
+    } = req.body
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -70,7 +82,19 @@ const editUser = (req, res, next) => {
     User
         .findByIdAndUpdate(
             userId,
-            { birth, gender, musicGenres, socialMedia, relatedArtists, playlists },
+            {
+                birth,
+                gender,
+                musicGenres,
+                socialMedia,
+                relatedArtists,
+                playlists,
+                artistName,
+                username,
+                role,
+                avatar,
+                artistGallery
+            },
             { runValidators: true, new: true }
         )
         .then(() => {
