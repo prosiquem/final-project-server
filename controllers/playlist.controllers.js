@@ -21,6 +21,27 @@ const getPlaylists = (req, res, next) => {
 
 }
 
+const getUserPlaylists = (req, res, next) => {
+
+    const { id: userId } = req.params
+
+    User
+        .findById(userId)
+        .select({ playlists: 1 })
+        .populate({
+            path: 'playlists',
+            select: ['name', 'cover', 'tracks', 'owner'],
+            model: Playlist,
+            populate: [
+                { path: 'tracks', select: ['title'] },
+                { path: 'owner', select: ['username'] }
+            ]
+        })
+        .then(userPlaylists => {
+            res.json(userPlaylists)
+        })
+}
+
 const getLastPlaylists = (req, res, next) => {
 
     Playlist
@@ -177,4 +198,4 @@ const deletePlaylist = (req, res, next) => {
 
 }
 
-module.exports = { getPlaylists, getLastPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist }
+module.exports = { getPlaylists, getLastPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist, getUserPlaylists }

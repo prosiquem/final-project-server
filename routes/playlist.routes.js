@@ -1,9 +1,10 @@
 const router = require('express').Router()
 
-const { getPlaylists, getLastPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist } = require('../controllers/playlist.controllers')
+const { getPlaylists, getLastPlaylists, getPlaylist, searchPlaylist, createPlaylist, editPlaylist, deletePlaylist, getUserPlaylists } = require('../controllers/playlist.controllers')
 
 const verifyToken = require('../middlewares/verifyToken')
 
+router.get('/playlists/user/:id', getUserPlaylists)
 router.get('/playlists/last', getLastPlaylists)
 router.get('/playlists/search', searchPlaylist)
 router.get('/playlists', getPlaylists)
