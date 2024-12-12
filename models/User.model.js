@@ -22,7 +22,7 @@ const userSchema = new Schema(
       type: Date,
       required: [true, 'La fecha de nacimiento es obligatoria']
     },
-    gender:{
+    gender: {
       type: String,
       enum: ['Woman', 'Man', 'Non Binary'],
       required: [true, 'El género es obligatorio']
@@ -40,13 +40,18 @@ const userSchema = new Schema(
       ref: 'Playlist'
     }],
 
+    tracksListened: {
+      type: Number,
+      default: 0,
+    },
+
     //Artist specific
     artistName: {
       type: String,
     },
     musicGenres: [{
-     type: String,
-     emun: [ "Rock", "Pop", "Jazz", "Blues", "Reggae", "Hip Hop", "Rap", "Country", "Clásica", "Metal", "Funk", "Soul", "Techno", "K-Pop","Bachata","Reggaeton", "Trap", "Indie"] 
+      type: String,
+      emun: ["Rock", "Pop", "Jazz", "Blues", "Reggae", "Hip Hop", "Rap", "Country", "Clásica", "Metal", "Funk", "Soul", "Techno", "K-Pop", "Bachata", "Reggaeton", "Trap", "Indie"]
     }],
     artistGallery: {
       type: [String]
@@ -56,9 +61,9 @@ const userSchema = new Schema(
     },
     socialMedia: {
       type: [{
-        socialMedia: {type: String},
-        url: {type: String},
-        icon: {type: String}
+        socialMedia: { type: String },
+        url: { type: String },
+        icon: { type: String }
       }],
     },
     relatedArtists: [{
@@ -77,9 +82,9 @@ const userSchema = new Schema(
   },
 
   {
-       timestamps: true
+    timestamps: true
   }
-  
+
 )
 
 const User = model("User", userSchema)

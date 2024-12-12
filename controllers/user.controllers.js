@@ -123,4 +123,23 @@ const deleteUser = (req, res, next) => {
         .catch(err => next(err))
 }
 
-module.exports = { getUser, getArtists, searchArtists, deleteUser, editUser }
+const countTracks = (req, res, next) => {
+    const { id: userId } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(404).json({ message: 'Este id no es válido' })
+    }
+
+    User.findById(userId)
+        .then(user => {
+            user.tracksListened = user.tracksListened + 1
+
+            return user.save()
+        })
+        .then(() => {
+            res.status(200)
+        })
+        .catch(err => next(err))
+}
+
+module.exports = { getUser, getArtists, searchArtists, deleteUser, editUser, countTracks }
