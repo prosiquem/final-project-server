@@ -11,7 +11,6 @@ const getPlaylists = (req, res, next) => {
     Playlist
         .find()
         .select({ name: 1, cover: 1, tracks: 1, owner: 1 })
-        .limit(4)
         .sort({ createdAt: -1 })
         .populate('tracks', 'title')
         .populate('owner', 'username')
@@ -70,19 +69,21 @@ const searchPlaylist = (req, res, next) => {
 
     const findQuery = (queryParams) => {
 
-        const { title, owner } = queryParams
+        const { title, ownerId } = queryParams
 
         const query = {}
 
-        // if (title) query.name = new RegExp(title, 'i')
-        if (owner) query.owner = new RegExp(owner, 'i')
+        if (title) query.name = new RegExp(title, 'i')
+        if (ownerId) query.owner = ownerId
 
         return query
     }
 
     Playlist
         .find(findQuery(req.query))
+        .limit(req.query.maxResult)
         .populate('tracks', 'title')
+        .populate('owner', 'username')
         .then(playlists => res.status(200).json(playlists))
         .catch(err => next(err))
 }
@@ -139,6 +140,17 @@ const deletePlaylist = (req, res, next) => {
     const { id: playlistId } = req.params
     const { _id: owner } = req.payload
 
+    const selectQuery = (queryParams) => {
+
+        const { id: playlistId } = queryParams
+        const query = {}
+
+        if (playlistId) query.playlists = { $in: [`${playlistId}`] }
+
+        return query
+
+    }
+
 
     if (!mongoose.Types.ObjectId.isValid(playlistId)) {
         res.status(404).json({ message: 'This id is not valid' })
@@ -152,13 +164,15 @@ const deletePlaylist = (req, res, next) => {
                 return res.status(404).json({ message: 'Playlist not found' });
             }
 
-            return (User.findByIdAndUpdate(
-                owner,
+            return (User.updateMany(
+                selectQuery(req.params),
                 { $pull: { playlists: playlistId } },
                 { runValidators: true, new: true }
             ))
         })
-        .then(() => res.sendStatus(200))
+        .then(users => {
+            res.json(users)
+        })
         .catch(err => next(err))
 
 }

@@ -28,6 +28,29 @@ const getArtists = (req, res, next) => {
         .catch(err => next(err))
 }
 
+const searchUserData = (req, res, next) => {
+
+    const { id: userId } = req.params
+
+    const selectQuery = (queryParams) => {
+
+        const { playlists } = queryParams
+        const query = {}
+
+        if (playlists) query.playlists = 1
+
+        return query
+
+    }
+
+    User
+        .findById(userId)
+        .select(selectQuery(req.query))
+        .then(userData => res.status(200).json(userData))
+        .catch(err => next(err))
+
+}
+
 const searchArtists = (req, res, next) => {
 
     const findQuery = (queryParams) => {
@@ -142,4 +165,4 @@ const countTracks = (req, res, next) => {
         .catch(err => next(err))
 }
 
-module.exports = { getUser, getArtists, searchArtists, deleteUser, editUser, countTracks }
+module.exports = { getUser, getArtists, searchArtists, deleteUser, editUser, countTracks, searchUserData }
