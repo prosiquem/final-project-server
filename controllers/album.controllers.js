@@ -188,4 +188,30 @@ const deleteAlbum = (req, res, next) => {
 
 }
 
+const deleteAlbums = (req, res, next) => {
+
+    const { id: albumId } = req.params
+    const { _id: author } = req.payload
+
+
+
+    if (!mongoose.Types.ObjectId.isValid(albumId)) {
+        res.status(404).json({ message: 'This id is not valid' })
+    }
+
+    Album
+        .findByIdAndDelete(albumId)
+        .then(deletedAlbum => {
+
+            if (!deletedAlbum) {
+                return res.status(404).json({ message: 'Album not found' });
+            }
+
+            res.sendStatus(200)
+
+        })
+        .catch(err => next(err))
+
+}
+
 module.exports = { getAlbums, getLastAlbums, getAlbum, searchAlbum, createAlbum, editAlbum, deleteAlbum, searchArtistsAlbum }
